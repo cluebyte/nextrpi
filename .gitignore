@@ -53,3 +53,7 @@ nosetests.xml
 
 # module initializer files
 __init__.py
+
+# sublime text config
+*.sublime-project
+*.sublime-workspace
