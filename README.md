@@ -1,40 +1,28 @@
-# Welcome to Evennia!
+# NextRPI
 
-This is your game directory, set up to let you start with
-your new game right away. An overview of this directory is found here:
-https://github.com/evennia/evennia/wiki/Directory-Overview#the-game-directory
+NextRPI is a (sort of!) opinionated engine designed for RPIs (Role-Playing Intensive) text-based games, powered by [Evennia](https://www.evennia.com). The engine will give the aspiring developer building blocks on which to build their dream game.
 
-You can delete this readme file when you've read it and you can
-re-arrange things in this game-directory to suit your own sense of
-organisation (the only exception is the directory structure of the
-`server/` directory, which Evennia expects). If you change the structure
-you must however also edit/add to your settings file to tell Evennia
-where to look for things.
+The philosophy of NextRPI is to give developers a solid foundation to build off of, offering a suite of extensible modules that are generally common to all text-based games, such as attributes, status effects, movement, manipulation commands, role-play commands, and items.
 
-Your game's main configuration file is found in
-`server/conf/settings.py` (but you don't need to change it to get
-started). If you just created this directory (which means you'll already
-have a `virtualenv` running if you followed the default instructions),
-`cd` to this directory then initialize a new database using
+## Roadmap
 
-    evennia migrate
+**NextRPI 1.0.0**
 
-To start the server, stand in this directory and run
+The next release of NextRPI is 1.0.0, ALPHA.
 
-    evennia start
+### Features
+The following features are planned:
+* [Attributes](https://github.com/cluebyte/nextrpi/wiki/Attributes)
+* Movement
+* Items
+* Status Effects
+* Role-Play Commands
+* Manipulation Commands
+* Skills
+* DEMO combat system (DUEL) *stretch goal!*
 
-This will start the server, logging output to the console. Make
-sure to create a superuser when asked. By default you can now connect
-to your new game using a MUD client on `localhost`, port `4000`.  You can 
-also log into the web client by pointing a browser to
-`http://localhost:8000`.
+Please consult our wiki for more information about the following features.
 
-# Getting started
+## Maintainers
 
-From here on you might want to look at one of the beginner tutorials:
-http://github.com/evennia/evennia/wiki/Tutorials.
-
-Evennia's documentation is here: 
-https://github.com/evennia/evennia/wiki.
-
-Enjoy!
+NextRPI is currently being maintained by Grungetown Studios.
