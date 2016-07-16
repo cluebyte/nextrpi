@@ -31,13 +31,13 @@ class Modifier(object):
         return {
                 "desc": self.desc,
                 "val": self.val,
-                "op": self.op,
+                "operator": self.operator,
                 "dbref": dbref,
                 "typeclass": self.typeclass
         }
 
     @property
-    def op(self):
+    def operator(self):
         return "undefined"
 
     def __eq__(self, other):
@@ -53,13 +53,14 @@ class Modifier(object):
     def __repr__(self):
         return str(self.serialize())
 
-    def factory(op, **kwargs):
+    def factory(**kwargs):
         """Factory method to instantiate the correct Modifier.
 
         Arguments: None
 
         Returns: Modifier
         """
+        op = kwargs.get("operator")
         if op == "+":
             return AddModifier(**kwargs)
         if op == "-":
@@ -82,7 +83,7 @@ class AddModifier(Modifier):
         return other + self.val
 
     @property
-    def op(self):
+    def operator(self):
         return "+"
 
 
@@ -95,7 +96,7 @@ class SubtractModifier(Modifier):
         return other - self.val
 
     @property
-    def op(self):
+    def operator(self):
         return "-"
 
 
@@ -108,7 +109,7 @@ class MultiplyModifier(Modifier):
         return other * self.val
 
     @property
-    def op(self):
+    def operator(self):
         return "*"
 
 
@@ -120,5 +121,5 @@ class DivideModifier(Modifier):
         return other / self.val
 
     @property
-    def op(self):
+    def operator(self):
         return "/"
