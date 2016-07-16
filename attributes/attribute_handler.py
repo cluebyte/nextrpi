@@ -1,20 +1,33 @@
 """
-AttributeHandler manages the attributes on a character, conveniently storing, adding, removing attributes.
+AttributeHandler manages the attributes on a character, conveniently storing, 
+adding, removing attributes.
 """
-
 from attribute import Attribute
 from attribute_observer import AttributeObserver
 from observer_constants import NotifyType
+from evennia.utils.search import search_object
 
 
 class AttributeHandler(object):
 
-    def __init__(self, char):
+    def __init__(self, char, category="attributes"):
+        self.char_dbref = char.id
+        self.category = category
         self.attributes = {}
-        self.observer = AttributeObserver(char.id)
+        self.observer = AttributeObserver(char.id, category)
+        # load all attributes into the handler
+        self.populate_cache()
+
+    @property
+    def character(self):
+        char = search_object("#{}".format(self.char_dbref))
+        if not char:
+            raise AttributeError("""character not found 
+                                    with id {}""".format(self.char_dbref))
+        return char
 
     def all(self):
-        """Gets all attributes.
+        """Gets all attributes in cache.
 
         Arguments: None
         Returns: List[Attribute]
@@ -28,6 +41,8 @@ class AttributeHandler(object):
         name (string) - name of the attribute used to store on character
         default (None) - default return value if attribute not found
         """
+        if not self.attributes:
+            self.populate_cache()
         if self.attributes.get(name):
             return self.attributes[name]
         if not default:
@@ -83,6 +98,28 @@ class AttributeHandler(object):
         for name in self.attributes.keys():
             self.remove(name)
 
+    def _fetch_all(self):
+        """Fetch all attributes and build them in our cache.
+    
+        Arguments: 
+        char (Character typeclass) - character we are fetching attributes from
+
+        Returns: None
+        """
+        # clear the cache
+        self.attributes = {}
+        attr_dicts = self.character.attributes.get(category=self.category)
+        for attr in attr_dicts:
+            self.attributes[attr.name] = Attribute(**attr)
+
+    def populate_cache(self):
+        """Populate the attribute handler cache with all attributes.
+
+        Arguments: None
+        Returns: None
+        """
+        self._fetch_all()
+
     def __getattr__(self, name):
         return self.get(name)
 
@@ -91,3 +128,6 @@ class AttributeHandler(object):
             self.__dict__[name] = value
         else:
             self.add(**value)
+
+    def __len__(self):
+        return len(self.attributes.keys())
