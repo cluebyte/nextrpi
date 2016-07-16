@@ -15,16 +15,16 @@ class Attribute(object):
     base (number) - the value the attribute starts at
     min (number) - attribute value floor
     max (number) - attribute value ceiling
-    modifier_handler (ModifierHandler) - stores all the modifiers
-    observer (AttributeObserver) - stores the observer that pushes updates
-                                    to the Character-level
+    modifiers (ModifierHandler) - stores all the modifiers
+    observer (AttributeObserver) - observer that pushes updates to the
+                                   Character-level
     """
     def __init__(self, observer, name="attr", base=0, min=0, max=0, mods=None):
         self._name = name
         self._base = base
         self.min = min
         self.max = max
-        self.modifier_handler = ModifierHandler(mods)
+        self.modifiers = ModifierHandler(mods)
         self.observer = observer
 
     @property
@@ -33,8 +33,9 @@ class Attribute(object):
 
     @property
     def cur_val(self):
-        mod_val = self.modifier_handler.get_modified_val(self.base)
-        return self.base + mod_val
+        mod_val = self.modifiers.get_modified_val(self.base)
+        cur_val = self.base + mod_val
+        return self._check_bounds(cur_val)
 
     @property
     def base(self):
@@ -42,12 +43,26 @@ class Attribute(object):
 
     @base.setter
     def base(self, new_val):
-        if new_val > self.max:
-            self._base = self.max
-        elif new_val < self.min:
-            self._base = self.min
+        new_val = self._check_bounds(new_val)
+        self._base = new_val
+
+    def _check_bounds(self, val):
+        """Check if the value exceeds the ceiling or floor of attribute value.
+
+        If it exceeds the bounds, we return the max or min. Or else we return
+        the value passed in.
+
+        Arguments:
+        val (number) - value that we are checking the bounds for
+
+        Returns: Number
+        """
+        if val > self.max:
+            return self.max
+        elif val < self.min:
+            return self.min
         else:
-            self._base = new_val
+            return val
 
     def notify_observer(self, type):
         """Notify the observer that an attribute has been changed.
@@ -59,7 +74,7 @@ class Attribute(object):
         """
         self.observer.notify(type, self.name, self.serialize())
 
-    def get_mod(source, **kwargs):
+    def get_mod(desc, **kwargs):
         """Get a modifier from the attribute.
 
         Arguments:
@@ -67,7 +82,7 @@ class Attribute(object):
 
         Returns: Modifier
         """
-        return self.modifier_handler.get(**kwargs)
+        return self.modifiers.get(desc, **kwargs)
 
     def add_mod(**kwargs):
         """Add a modifier to the attribute.
@@ -77,7 +92,7 @@ class Attribute(object):
 
         Returns: None
         """
-        self.modifier_handler.add(**kwargs)
+        self.modifiers.add(**kwargs)
         self.notify_observer(NotifyType.UPDATE)
 
     def remove_mod(self, modifier):
@@ -88,8 +103,8 @@ class Attribute(object):
 
         Returns: None
         """
-        self.modifier_handler.remove(modifier)
-        self.notify_observer(NotifyType.DELETE)
+        self.modifiers.remove(modifier)
+        self.notify_observer(NotifyType.UPDATE)
 
     def serialize(self):
         """Serialize for storage.
@@ -102,7 +117,7 @@ class Attribute(object):
                 "base": self.base,
                 "min": self.min,
                 "max": self.max,
-                "modifiers": self.modifier_handler.serialize_all_mods()
+                "modifiers": self.modifiers.serialize_all_mods()
         }
 
     def __repr__(self):
