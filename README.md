@@ -1,6 +1,6 @@
 # NextRPI
 
-NextRPI is a (sort of!) opinionated engine designed for RPIs (Role-Playing Intensive) text-based games, powered by [Evennia](https://www.evennia.com). The engine will give the aspiring developer building blocks on which to build their dream game.
+NextRPI is a (sort of!) opinionated engine designed for text-based games, powered by [Evennia](https://www.evennia.com). The engine will give the aspiring developer building blocks on which to build their dream game. Although this engine draws inspiration from the RPI genre (NextRPI is a nod to the RPI genre), this engine is not limited to RPIs. Any text-based game may find movement, attributes, items, or role-play commands useful!
 
 The philosophy of NextRPI is to give developers a solid foundation to build off of, offering a suite of extensible modules that are generally common to all text-based games, such as attributes, status effects, movement, manipulation commands, role-play commands, and items.
 
