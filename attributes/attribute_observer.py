@@ -5,6 +5,7 @@ Attribute Observer uses the Observer Design pattern to push updates up to the ch
 from evennia.utils.search import search_object
 from observer_constants import NotifyType
 
+
 class ObserverException(Error):
     def __init__(self, msg):
         super(ObserverException, self).__init__(msg)
@@ -13,8 +14,9 @@ class ObserverException(Error):
 
 class AttributeObserver(object):
 
-    def __init__(self, dbref):
+    def __init__(self, dbref, category):
         self.char_dbref = dbref
+        self.category = category
 
     def notify(self, type, **kwargs):
         """Notify the observer to push updates to the character.
@@ -35,9 +37,13 @@ class AttributeObserver(object):
 
     @property
     def character(self):
-        return search_object("#{}".format(self.char_dbref))
+        char = search_object("#{}".format(self.char_dbref))
+        if not char:
+            raise AttributeError("""character not found 
+                                    with id {}""".format(self.char_dbref))
+        return char
 
-    def _delete(attr_name):
+    def _delete(self, attr_name):
         """Delete attribute from character.
 
         Arguments:
@@ -47,7 +53,7 @@ class AttributeObserver(object):
         """
         self.character.attributes.remove(attr_name)
 
-    def _update(attr_name, serialized_data):
+    def _update(self, attr_name, serialized_data):
         """Update attribute on character using serialized data.
 
         Arguments:
@@ -57,9 +63,10 @@ class AttributeObserver(object):
         Returns: None
         """
         self.character.attributes.remove(attr_name)
-        self.character.attributes.add(attr_name, serialized_data)
+        self.character.attributes.add(attr_name, serialized_data, 
+                                    category=self.category)
 
-    def _create(attr_name, serialized_data):
+    def _create(self, attr_name, serialized_data):
         """Create attribute on character using serialized_data.
 
         Arguments:
@@ -68,4 +75,5 @@ class AttributeObserver(object):
 
         Returns: None
         """
-        self.character.attributes.add(attr_name, serialized_data)
+        self.character.attributes.add(attr_name, serialized_data,
+                                    category=self.category)
