@@ -12,7 +12,7 @@ The next release of NextRPI is 1.0.0, ALPHA.
 
 ### Features
 The following features are planned:
-* Attributes
+* [Attributes](https://github.com/cluebyte/nextrpi/wiki/Attributes)
 * Movement
 * Items
 * Status Effects
