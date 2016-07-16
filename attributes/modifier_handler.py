@@ -67,7 +67,7 @@ class ModifierHandler(object):
                         "can't find modifier for desc '{}'".format(desc)
                 )
         for candidate in self.modifiers[desc]:
-            for filter_attr, filter_val in filters.iteritems():
+            for filter_attr, filter_val in filters.items():
                 if getattr(candidate, filter_attr, default=None) != filter_val:
                     break
             return candidate
