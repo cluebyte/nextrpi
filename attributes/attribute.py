@@ -44,7 +44,7 @@ class Attribute(object):
 
     @property
     def cur_val(self):
-        mod_val = self.get_modified_val(self.base)
+        mod_val = self._get_modified_val(self.base)
         cur_val = self.base + mod_val
         return self._check_bounds(cur_val)
 
@@ -57,7 +57,7 @@ class Attribute(object):
         new_val = self._check_bounds(new_val)
         self._base = new_val
 
-    def get_modified_val(self):
+    def _get_modified_val(self):
         """Get the sum of the modifiers on the attribute.
 
         Arguments: None
@@ -125,7 +125,7 @@ class Attribute(object):
         self.modifiers.remove(modifier)
         self.notify_observer(NotifyType.UPDATE)
 
-    def get_serialized_mods(self):
+    def _get_serialized_mods(self):
         """Fetch all serialized modifiers attached on the attribute.
 
         Arguments: None
@@ -146,7 +146,7 @@ class Attribute(object):
                 "min": self.min,
                 "max": self.max,
                 "type": "attribute",
-                "modifiers": self.get_serialized_mods() }
+                "modifiers": self._get_serialized_mods() }
 
     def __repr__(self):
         return self.serialize()
