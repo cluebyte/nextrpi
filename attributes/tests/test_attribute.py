@@ -26,12 +26,12 @@ class AttributeTestCase(TestCase):
 
     def test_initial_state(self):
         self.assertEqual(self.attr.name, "test_attr")
-        self.assertEqual(self.attr.base, 20)
-        self.assertEqual(self.attr.min, 0)
-        self.assertEqual(self.attr.max, 100)
+        self.assertEqual(self.attr.base, BASE_VAL)
+        self.assertEqual(self.attr.min, MIN_VAL)
+        self.assertEqual(self.attr.max, MAX_VAL)
         self.assertEqual(self.cur_val, 10)
 
-    def test_modfiy_base(self):
+    def test_modify_base(self):
         self.attr.base += 1
         self.assertEqual(self.attr.base, BASE_VAL + 1)
 
