@@ -2,27 +2,49 @@
 AttributeHandler manages the attributes on a character, conveniently storing, 
 adding, removing attributes.
 """
-from attribute import Attribute
+from attribute import Attribute, AttributeException
+from resource import Resource
 from attribute_observer import AttributeObserver
 from observer_constants import NotifyType
 from evennia.utils.search import search_object
 
 
 class AttributeHandler(object):
-
+    """
+    Properties:
+    char_dbref (int) - dbref id of the character observer is attached to
+    category (string) - category of the attributes under handler
+    attributes (dict) - attribute_name: Attribute mappings of all attributes in
+                        handler
+    observer (AttributeObserver) - observer that pushes updates to the
+                                   Character-level
+    """
     def __init__(self, char, category="attributes"):
-        self.char_dbref = char.id
-        self.category = category
+        self._char_dbref = char.id
+        self._category = category
         self.attributes = {}
         self.observer = AttributeObserver(char.id, category)
         # load all attributes into the handler
         self.populate_cache()
 
     @property
+    def category(self):
+        return self._category
+
+    @property
+    def char_dbref(self):
+        return self._char_dbref
+
+    @property
     def character(self):
+        """Return the character associated to the char_dbref.
+        
+        Arguments: None
+        Returns: Character
+        """
         char = search_object("#{}".format(self.char_dbref))
         if not char:
-            raise AttributeError("""character not found 
+            raise AttributeException("""character not found 
                                     with id {}""".format(self.char_dbref))
         return char
 
@@ -41,27 +63,30 @@ class AttributeHandler(object):
         name (string) - name of the attribute used to store on character
         default (None) - default return value if attribute not found
         """
+        # if dict is currently empty, we repopulate the cache before we try
+        # and get any attributes
         if not self.attributes:
             self.populate_cache()
         if self.attributes.get(name):
             return self.attributes[name]
         if not default:
-            raise AttributeError(
+            raise AttributeException(
                                 "could not find attribute {}".format(name)
             )
         return default
 
-    def add(self, **kwargs):
+    def add(self, **serialized_attr):
         """Add an attribute to the character.
 
         Arguments:
-        kwargs - kwargs used to instantiate Attribute
+        serialized_attr - serialized_attr used to instantiate Attribute
         
         Returns: None
         """
-        if self.get(name):
-            raise
-        attr = Attribute(observer, **kwargs)
+        if self.get(serialized_attr.name):
+            raise AttributeException("""attribute {} already 
+                                        exists""".format(serialized_attr.name))
+        attr = self._build_attribute(**serialized_attr)
         self.attributes[name] = attr
         self.observer.notify_observer()
         self.notify_observer(NotifyType.CREATE, name, attr.serialize())
@@ -75,7 +100,7 @@ class AttributeHandler(object):
         Returns: None
         """
         if not self.get(name):
-            raise AttributeError("could not find attribute {}".format(name))
+            raise AttributeException("could not find attribute {}".format(name))
         del self.attributes[name]
         self.notify_observer(NotifyType.DELETE, name)
 
@@ -98,6 +123,14 @@ class AttributeHandler(object):
         for name in self.attributes.keys():
             self.remove(name)
 
+    def _build_attribute(self, **serialized_attr):
+        if serialized_attr.type == "attribute":
+            return Attribute(self.observer, **serialized_attr)
+        elif serialized_attr.type == "resource":
+            return Resource(self.observer, **serialized_attr)
+        else:
+            assert 0, "invalid attribute type: {}".format(serialized_attr.type)
+
     def _fetch_all(self):
         """Fetch all attributes and build them in our cache.
     
@@ -110,7 +143,7 @@ class AttributeHandler(object):
         self.attributes = {}
         attr_dicts = self.character.attributes.get(category=self.category)
         for attr in attr_dicts:
-            self.attributes[attr.name] = Attribute(**attr)
+            self.attributes[attr.name] = self._build_attribute(attr)
 
     def populate_cache(self):
         """Populate the attribute handler cache with all attributes.

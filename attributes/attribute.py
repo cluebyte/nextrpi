@@ -8,9 +8,15 @@ from modifier_handler import ModifierHandler
 from observer_constants import NotifyType
 
 
+class AttributeException(Exception):
+    def __init__(self, msg):
+        super(AttributeException, self).__init__(msg)
+        self.msg = msg
+
+
 class Attribute(object):
     """
-    Attributes:
+    Properties:
     name (string) - name of the attribute
     base (number) - the value the attribute starts at
     min (number) - attribute value floor
@@ -74,7 +80,7 @@ class Attribute(object):
         """
         self.observer.notify(type, self.name, self.serialize())
 
-    def get_mod(desc, **kwargs):
+    def get_mod(self, desc, **kwargs):
         """Get a modifier from the attribute.
 
         Arguments:
@@ -84,7 +90,7 @@ class Attribute(object):
         """
         return self.modifiers.get(desc, **kwargs)
 
-    def add_mod(**kwargs):
+    def add_mod(self, **kwargs):
         """Add a modifier to the attribute.
 
         Arguments:
@@ -114,11 +120,12 @@ class Attribute(object):
         Returns: dict
         """
         return {
+                "name": self.name,
                 "base": self.base,
                 "min": self.min,
                 "max": self.max,
-                "modifiers": self.modifiers.serialize_all_mods()
-        }
+                "type": "attribute",
+                "modifiers": self.modifiers.serialize_all_mods() }
 
     def __repr__(self):
         return self.serialize()

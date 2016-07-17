@@ -13,7 +13,11 @@ class ObserverException(Error):
 
 
 class AttributeObserver(object):
-
+    """
+    Properties:
+    char_dbref (int) - dbref id of the character observer is attached to
+    category (string) - category of the attributes under handler
+    """
     def __init__(self, dbref, category):
         self.char_dbref = dbref
         self.category = category
@@ -37,9 +41,14 @@ class AttributeObserver(object):
 
     @property
     def character(self):
+        """Return the character associated to the char_dbref.
+        
+        Arguments: None
+        Returns: Character
+        """
         char = search_object("#{}".format(self.char_dbref))
         if not char:
-            raise AttributeError("""character not found 
+            raise ObserverException("""character not found 
                                     with id {}""".format(self.char_dbref))
         return char
 

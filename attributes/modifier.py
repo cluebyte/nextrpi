@@ -4,7 +4,14 @@ Modifiers store information that can modify an attribute, and also its origin.
 
 
 class Modifier(object):
-
+    """
+    Properties:
+    desc (string) - descriptive name for the modifier, eg. justice aura,
+                    the flu, headache, etc.
+    val (number) - value of the modifier
+    dbref (int) - dbref id of the Object that this modifier originated from
+    typeclass (string) - either "Object", "Player", "Script"
+    """
     def __init__(self, desc="unknown", val=0, dbref=None, typeclass=None):
         self.desc = desc
         self.val = val
