@@ -16,8 +16,8 @@ class AttributeTestCase(TestCase):
     def setUp(self):
         self.attr = Attribute(None, name="test_attr", base=self.BASE_VAL,
                               min=self.MIN_VAL, max=self.MAX_VAL)
-        self.attr.get_modified_val = Mock(return_value=self.MOD_VAL)
-        self.attr.get_serialized_mods = Mock(return_value=[])
+        self.attr._get_modified_val = Mock(return_value=self.MOD_VAL)
+        self.attr._get_serialized_mods = Mock(return_value=[])
 
     def tearDown(self):
         self.attr = None
