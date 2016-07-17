@@ -30,6 +30,8 @@ class Attribute(object):
         self._base = base
         self.min = min
         self.max = max
+        if not mods:
+            mods = {}
         self.modifiers = ModifierHandler(mods)
         self.observer = observer
 
@@ -39,7 +41,7 @@ class Attribute(object):
 
     @property
     def cur_val(self):
-        mod_val = self.modifiers.get_modified_val(self.base)
+        mod_val = self.get_modified_val(self.base)
         cur_val = self.base + mod_val
         return self._check_bounds(cur_val)
 
@@ -51,6 +53,14 @@ class Attribute(object):
     def base(self, new_val):
         new_val = self._check_bounds(new_val)
         self._base = new_val
+
+    def get_modified_val(self):
+        """Get the sum of the modifiers on the attribute.
+
+        Arguments: None
+        Returns: Number
+        """
+        return self.modifiers.get_modified_val(self.base)
 
     def _check_bounds(self, val):
         """Check if the value exceeds the ceiling or floor of attribute value.
