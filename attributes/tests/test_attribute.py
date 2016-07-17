@@ -17,23 +17,23 @@ class AttributeTestCase(TestCase):
 
     def setUp(self):
         obs_mock = Mock(spec=AttributeObserver)
-        self.attr = Attribute(obs_mock, name="test_attr", base=BASE_VAL,
-                              min=MIN_VAL, max=MAX_VAL)
-        self.attr.get_modified_val = Mock(return_value=MOD_VAL)
+        self.attr = Attribute(obs_mock, name="test_attr", base=self.BASE_VAL,
+                              min=self.MIN_VAL, max=self.MAX_VAL)
+        self.attr.get_modified_val = Mock(return_value=self.MOD_VAL)
 
     def tearDown(self):
         self.attr = None
 
     def test_initial_state(self):
         self.assertEqual(self.attr.name, "test_attr")
-        self.assertEqual(self.attr.base, BASE_VAL)
-        self.assertEqual(self.attr.min, MIN_VAL)
-        self.assertEqual(self.attr.max, MAX_VAL)
+        self.assertEqual(self.attr.base, self.BASE_VAL)
+        self.assertEqual(self.attr.min, self.MIN_VAL)
+        self.assertEqual(self.attr.max, self.MAX_VAL)
         self.assertEqual(self.cur_val, 10)
 
     def test_modify_base(self):
         self.attr.base += 1
-        self.assertEqual(self.attr.base, BASE_VAL + 1)
+        self.assertEqual(self.attr.base, self.BASE_VAL + 1)
 
     def test_modify_base_beyond_max(self):
         self.attr.base += 100
