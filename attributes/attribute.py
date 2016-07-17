@@ -31,7 +31,7 @@ class Attribute(object):
         self.min = min
         self.max = max
         if not mods:
-            mods = {}
+            mods = []
         self.modifiers = ModifierHandler(mods)
         self.observer = observer
 
