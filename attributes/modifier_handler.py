@@ -61,10 +61,9 @@ class ModifierHandler(object):
 
         Example: self.get("caffeine addiction", dbref=3, typeclass="Medicine")
         """
-        if not self.modifiers.get(desc):
+        if desc not in self.modifiers:
             raise AttributeError(
-                        "can't find modifier for desc '{}'".format(desc)
-                )
+                        "can't find modifier for desc '{}'".format(desc))
         for candidate in self.modifiers[desc]:
             for filter_attr, filter_val in filters.items():
                 if getattr(candidate, filter_attr, default=None) != filter_val:
@@ -130,7 +129,7 @@ class ModifierHandler(object):
         return self.get(name)
 
     def __setattr__(self, name, value):
-        if getattr(self, name, default=None):
+        if getattr(self, name, None):
             self.__dict__[name] = value
         else:
             self.add(**value)

@@ -6,6 +6,7 @@ damage, making an athletics check to vault over a wall, etc.
 """
 from modifier_handler import ModifierHandler
 from observer_constants import NotifyType
+from evennia.utils.utils import lazy_property
 
 
 class AttributeException(Exception):
@@ -32,8 +33,12 @@ class Attribute(object):
         self.max = max
         if not mods:
             mods = []
-        self.modifiers = ModifierHandler(mods)
+        self._raw_mods = mods
         self.observer = observer
+
+    @lazy_property
+    def modifiers(self):
+        return ModifierHandler(self._raw_mods)
 
     @property
     def name(self):
