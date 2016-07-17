@@ -27,7 +27,7 @@ class AttributeTestCase(TestCase):
         self.assertEqual(self.attr.base, self.BASE_VAL)
         self.assertEqual(self.attr.min, self.MIN_VAL)
         self.assertEqual(self.attr.max, self.MAX_VAL)
-        self.assertEqual(self.attr.cur_val, 10)
+        self.assertEqual(self.attr.cur_val, self.BASE_VAL + SELF.MOD_VAL)
 
     def test_modify_base(self):
         self.attr.base += 1
