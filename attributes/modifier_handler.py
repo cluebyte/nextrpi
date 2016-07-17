@@ -1,9 +1,8 @@
 """
 ModifierHandler manages the modifiers on a given attribute, conveniently storing, adding, removing, and calculating the final modified result based on all the modifiers stored.
 """
-
 from modifier import Modifier
-from modifier_utils import resolve_modified_val
+
 
 class ModifierHandler(object):
 
