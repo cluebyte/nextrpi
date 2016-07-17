@@ -31,9 +31,7 @@ class Attribute(object):
         self._base = base
         self.min = min
         self.max = max
-        if not mods:
-            mods = []
-        self._raw_mods = mods
+        self._raw_mods = mods if mods else []
         self.observer = observer
 
     @lazy_property
@@ -127,6 +125,14 @@ class Attribute(object):
         self.modifiers.remove(modifier)
         self.notify_observer(NotifyType.UPDATE)
 
+    def get_serialized_mods(self):
+        """Fetch all serialized modifiers attached on the attribute.
+
+        Arguments: None
+        Returns: List[dict]
+        """
+        return self.modifiers.serialize_all_mods()
+
     def serialize(self):
         """Serialize for storage.
 
@@ -140,7 +146,7 @@ class Attribute(object):
                 "min": self.min,
                 "max": self.max,
                 "type": "attribute",
-                "modifiers": self.modifiers.serialize_all_mods() }
+                "modifiers": self.get_serialized_mods() }
 
     def __repr__(self):
         return self.serialize()

@@ -3,9 +3,7 @@ Unit test module for Attribute classes.
 """
 from django.test import TestCase
 from attributes.attribute import Attribute
-from attributes.modifier_handler import ModifierHandler
 from mock import Mock
-from attributes.attribute_observer import AttributeObserver
 
 
 class AttributeTestCase(TestCase):
@@ -16,13 +14,10 @@ class AttributeTestCase(TestCase):
     MAX_VAL = 100
 
     def setUp(self):
-        obs_mock = Mock(spec=AttributeObserver)
-        mod_handler_mock = Mock(spec=ModifierHandler)
-        mod_handler_mock.serialize_all_mods = Mock(return_value=[])
-        self.attr = Attribute(obs_mock, name="test_attr", base=self.BASE_VAL,
+        self.attr = Attribute(None, name="test_attr", base=self.BASE_VAL,
                               min=self.MIN_VAL, max=self.MAX_VAL)
-        self.attr.modifiers = mod_handler_mock
         self.attr.get_modified_val = Mock(return_value=self.MOD_VAL)
+        self.attr.get_serialized_mods = Mock(return_value=[])
 
     def tearDown(self):
         self.attr = None
