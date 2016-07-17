@@ -6,7 +6,7 @@ from evennia.utils.search import search_object
 from observer_constants import NotifyType
 
 
-class ObserverException(Error):
+class ObserverException(Exception):
     def __init__(self, msg):
         super(ObserverException, self).__init__(msg)
         self.msg = msg
