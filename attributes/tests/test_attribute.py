@@ -17,8 +17,11 @@ class AttributeTestCase(TestCase):
 
     def setUp(self):
         obs_mock = Mock(spec=AttributeObserver)
+        mod_handler_mock = Mock(spec=ModifierHandler)
+        mod_handler_mock.serialize_all_mods = Mock(return_value=[])
         self.attr = Attribute(obs_mock, name="test_attr", base=self.BASE_VAL,
                               min=self.MIN_VAL, max=self.MAX_VAL)
+        self.attr.modifiers = mod_handler_mock
         self.attr.get_modified_val = Mock(return_value=self.MOD_VAL)
 
     def tearDown(self):
@@ -29,7 +32,7 @@ class AttributeTestCase(TestCase):
         self.assertEqual(self.attr.base, self.BASE_VAL)
         self.assertEqual(self.attr.min, self.MIN_VAL)
         self.assertEqual(self.attr.max, self.MAX_VAL)
-        self.assertEqual(self.cur_val, 10)
+        self.assertEqual(self.attr.cur_val, 10)
 
     def test_modify_base(self):
         self.attr.base += 1
