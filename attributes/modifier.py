@@ -39,7 +39,7 @@ class Modifier(object):
                 "desc": self.desc,
                 "val": self.val,
                 "operator": self.operator,
-                "dbref": dbref,
+                "dbref": self.dbref,
                 "typeclass": self.typeclass
         }
 
@@ -68,14 +68,13 @@ class Modifier(object):
         Returns: Modifier
         """
         op = kwargs.get("operator")
+        del kwargs['operator']
         if op == "+":
             return AddModifier(**kwargs)
         if op == "-":
             return SubtractModifier(**kwargs)
         if op == "*":
             return MultiplyModifier(**kwargs)
-        if op == "/":
-            return DivideModifier(**kwargs)
         assert 0, "Bad Modifier creation: '{}'".format(op)
 
     factory = staticmethod(factory)
@@ -84,7 +83,7 @@ class Modifier(object):
 class AddModifier(Modifier):
 
     def __init__(self, **kwargs):
-        super(Modifier, self).__init__(**kwargs)
+        super(AddModifier, self).__init__(**kwargs)
 
     def get_modified_val(self, other):
         return other + self.val
@@ -97,7 +96,7 @@ class AddModifier(Modifier):
 class SubtractModifier(Modifier):
 
     def __init__(self, **kwargs):
-        super(Modifier, self).__init__(**kwargs)
+        super(SubtractModifier, self).__init__(**kwargs)
 
     def get_modified_val(self, other):
         return other - self.val
@@ -110,7 +109,7 @@ class SubtractModifier(Modifier):
 class MultiplyModifier(Modifier):
 
     def __init__(self, **kwargs):
-        super(Modifier, self).__init__(**kwargs)
+        super(MultiplyModifier, self).__init__(**kwargs)
 
     def get_modified_val(self, other):
         return other * self.val
@@ -118,15 +117,3 @@ class MultiplyModifier(Modifier):
     @property
     def operator(self):
         return "*"
-
-
-class DivideModifier(Modifier):
-    def __init__(self, **kwargs):
-        super(Modifier, self).__init__(**kwargs)
-
-    def get_modified_val(self, other):
-        return other / self.val
-
-    @property
-    def operator(self):
-        return "/"
