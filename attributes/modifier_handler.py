@@ -61,14 +61,15 @@ class ModifierHandler(object):
 
         Example: self.get("caffeine addiction", dbref=3, typeclass="Medicine")
         """
-        if desc not in self.modifiers:
-            raise AttributeError(
-                        "can't find modifier for desc '{}'".format(desc))
+        found = True
         for candidate in self.modifiers[desc]:
             for filter_attr, filter_val in filters.items():
-                if getattr(candidate, filter_attr, default=None) != filter_val:
-                    break
-            return candidate
+                if getattr(candidate, filter_attr) != filter_val:
+                    found = False
+            if found:
+                return candidate
+            found = True
+        raise AttributeError("can't find modifier {}".format(desc))
 
     def all(self):
         """Fetch all modifiers that exist on the attribute.
@@ -91,7 +92,7 @@ class ModifierHandler(object):
         res = self._resolve_modified_val(base_val)
         return res
 
-    def _resolve_modified_val(base_val):
+    def _resolve_modified_val(self, base_val):
         """Resolve order of operations for modifier parameters.
 
         Return the modified value based on order of operations of the modifiers.
@@ -124,12 +125,3 @@ class ModifierHandler(object):
 
     def __len__(self):
         return len(self._raw_modifiers)
-
-    def __getattr__(self, name):
-        return self.get(name)
-
-    def __setattr__(self, name, value):
-        if getattr(self, name, None):
-            self.__dict__[name] = value
-        else:
-            self.add(**value)
