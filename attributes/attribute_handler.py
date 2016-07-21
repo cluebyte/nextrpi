@@ -45,7 +45,7 @@ class AttributeHandler(object):
         char = search_object("#{}".format(self.char_dbref))
         if not char:
             raise AttributeException("""character not found 
-                                    with id {}""".format(self.char_dbref))
+                                        with id {}""".format(self.char_dbref))
         return char
 
     def all(self):
@@ -157,7 +157,7 @@ class AttributeHandler(object):
         return self.get(name)
 
     def __setattr__(self, name, value):
-        if getattr(self, name, default=None):
+        if getattr(self, name):
             self.__dict__[name] = value
         else:
             self.add(**value)
