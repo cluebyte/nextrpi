@@ -26,12 +26,12 @@ class Attribute(object):
     observer (AttributeObserver) - observer that pushes updates to the
                                    Character-level
     """
-    def __init__(self, observer, name="attr", base=0, min=0, max=0, mods=None):
-        self._name = name
-        self._base = base
-        self.min = min
-        self.max = max
-        self._raw_mods = mods if mods else []
+    def __init__(self, observer, **kwargs):
+        self._name = kwargs.get('name')
+        self._base = kwargs.get('base')
+        self.min = kwargs.get('min')
+        self.max = kwargs.get('max')
+        self._raw_mods = kwargs.get('mods') if kwargs.get('mods') else []
         self.observer = observer
 
     @lazy_property
@@ -149,7 +149,14 @@ class Attribute(object):
                 "modifiers": self._get_serialized_mods() }
 
     def __repr__(self):
-        return self.serialize()
+        return str(self.serialize())
 
     def __str__(self):
-        return self.serialize()
+        return str(self.serialize())
+
+    def __eq__(self, other):
+        return (isinstance(other, self.__class__)
+            and self.__dict__ == other.__dict__)
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
