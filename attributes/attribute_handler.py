@@ -96,7 +96,6 @@ class AttributeHandler(object):
                                         exists""".format(name))
         attr = self._build_attribute(**serialized_attr)
         self.attributes[name] = attr
-        self.observer.notify_observer()
         self.notify_observer(NotifyType.CREATE, name, attr.serialize())
 
     def remove(self, name):
