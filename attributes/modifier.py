@@ -58,7 +58,7 @@ class Modifier(object):
         return str(self.serialize())
 
     def __repr__(self):
-        return str(self.serialize())
+        return str(self.__dict__)
 
     def factory(**kwargs):
         """Factory method to instantiate the correct Modifier.
