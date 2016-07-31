@@ -18,9 +18,9 @@ class AttributeHandler(object):
     attrobj (Attribute objref) - Evennia database attribute direct object
                                  reference, used to save changes to the handler
     """
-    def __init__(self, char, name="attribute_handler"):
+    def __init__(self, char, db_name="attribute_handler"):
         self.attributes = {}
-        char.attributes.add(name, self)
+        char.attributes.add(db_name, self)
         self.attrobj = char.attributes.get(name, return_obj=True)
 
     def all(self):
