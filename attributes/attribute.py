@@ -32,7 +32,7 @@ class Attribute(object):
         self._base = kwargs.get('base')
         self.min = kwargs.get('min')
         self.max = kwargs.get('max')
-        self.modifiers = ModifierHandler(self._raw_mods)
+        self.modifiers = ModifierHandler(kwargs.get('modifiers', []))
         self.attrobj = attrobj
 
     @property
