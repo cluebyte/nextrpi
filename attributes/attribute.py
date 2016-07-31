@@ -7,6 +7,7 @@ damage, making an athletics check to vault over a wall, etc.
 from modifier_handler import ModifierHandler
 from observer_constants import NotifyType
 from evennia.utils.utils import lazy_property
+from save_wrapper import save_attr
 
 
 class AttributeException(Exception):
@@ -23,20 +24,16 @@ class Attribute(object):
     min (number) - attribute value floor
     max (number) - attribute value ceiling
     modifiers (ModifierHandler) - stores all the modifiers
-    observer (AttributeObserver) - observer that pushes updates to the
-                                   Character-level
+    attrobj (Attribute objref) - Evennia database attribute direct object
+                                 reference, used to save changes to the handler
     """
-    def __init__(self, observer, **kwargs):
+    def __init__(self, attrobj, **kwargs):
         self._name = kwargs.get('name')
         self._base = kwargs.get('base')
         self.min = kwargs.get('min')
         self.max = kwargs.get('max')
-        self._raw_mods = kwargs.get('mods') if kwargs.get('mods') else []
-        self.observer = observer
-
-    @lazy_property
-    def modifiers(self):
-        return ModifierHandler(self._raw_mods)
+        self.modifiers = ModifierHandler(self._raw_mods)
+        self.attrobj = attrobj
 
     @property
     def name(self):
@@ -83,16 +80,6 @@ class Attribute(object):
         else:
             return val
 
-    def notify_observer(self, type):
-        """Notify the observer that an attribute has been changed.
-
-        Arguments:
-        type (NotifyType) - notification type of the change
-
-        Returns: None
-        """
-        self.observer.notify(type, self.name, self.serialize())
-
     def get_mod(self, desc, **kwargs):
         """Get a modifier from the attribute.
 
@@ -103,6 +90,7 @@ class Attribute(object):
         """
         return self.modifiers.get(desc, **kwargs)
 
+    @save_attr
     def add_mod(self, **kwargs):
         """Add a modifier to the attribute.
 
@@ -112,8 +100,8 @@ class Attribute(object):
         Returns: None
         """
         self.modifiers.add(**kwargs)
-        self.notify_observer(NotifyType.UPDATE)
 
+    @save_attr
     def remove_mod(self, modifier):
         """Remove a modifier from the attribute.
 
@@ -123,7 +111,6 @@ class Attribute(object):
         Returns: None
         """
         self.modifiers.remove(modifier)
-        self.notify_observer(NotifyType.UPDATE)
 
     def _get_serialized_mods(self):
         """Fetch all serialized modifiers attached on the attribute.
@@ -149,7 +136,7 @@ class Attribute(object):
                 "modifiers": self._get_serialized_mods() }
 
     def __repr__(self):
-        return str(self.serialize())
+        return str(self.__dict__)
 
     def __str__(self):
         return str(self.serialize())
