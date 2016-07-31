@@ -53,5 +53,5 @@ def save_attr(func):
         func(self, *args, **kwargs)
         def save(self):
             self.attrobj.value = self
-        save()
+        save(self)
     return wrapper
