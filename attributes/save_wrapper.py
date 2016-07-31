@@ -1,6 +1,6 @@
 """
 Save wrapper for attribute objects. This will save any changes made to custom
-Python objects to Evennia typeclasses by using the AttributeHandler.
+Python objects to Evennia typeclasses by using Evennia's AttributeHandler.
 
 If you intend on using this wrapper, your Object MUST have an 'attrobj'
 member variable on it that contains the attribute object reference to the
