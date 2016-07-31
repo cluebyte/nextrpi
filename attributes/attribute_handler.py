@@ -76,7 +76,6 @@ class AttributeHandler(object):
             raise AttributeException("could not find attribute {}".format(name))
         del self.attributes[name]
 
-    @save_attr
     def clear(self):
         """Clear all attributes from the character.
 
