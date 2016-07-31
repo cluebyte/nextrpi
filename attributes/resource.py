@@ -5,6 +5,7 @@ as health, mana, rocket power, etc.
 from attribute import Attribute
 from resource_constants import AttributeType
 from observer_constants import NotifyType
+from save_wrapper import save_attr
 
 
 class Resource(object):
@@ -14,13 +15,13 @@ class Resource(object):
     base (number) - the value the attribute starts at
     min (Attribute) - attribute value floor
     max (Attribute) - attribute value ceiling
-    observer (AttributeObserver) - observer that pushes updates to the
-                                   Character-level
     recharge_interval (number) - interval between recharges in seconds
     will_charge (boolean) - if recharging is enabled
     cur_val (number) - current value of the resource
+    attrobj (Attribute objref) - Evennia database attribute direct object
+                                 reference, used to save changes to the handler
     """
-    def __init__(self, observer, name="resource", cur_val=0, min=None, 
+    def __init__(self, attrobj, name="resource", cur_val=0, min=None, 
                 max=None, recharge_interval=60, recharge_rate=1):
         self.name = name
         self._cur_val = cur
@@ -29,7 +30,7 @@ class Resource(object):
         self.recharge_rate = recharge_rate
         self.recharge_interval = recharge_interval
         self.will_recharge = False
-        self.observer = observer
+        self.attrobj = attrobj
 
     @property
     def max_modifiers(self):
@@ -64,16 +65,6 @@ class Resource(object):
         else:
             self._cur_val = other
 
-    def notify_observer(self, type):
-        """Notify the observer that an attribute has been changed.
-
-        Arguments:
-        type (NotifyType) - notification type of the change
-
-        Returns: None
-        """
-        self.observer.notify(type, self.name, self.serialize())
-
     def get_mod(self, attr_type, desc, **kwargs):
         if attr_type == "max":
             return self.max_modifiers.get(desc, **kwargs)
@@ -81,6 +72,7 @@ class Resource(object):
             return self.min_modifiers.get(desc, **kwargs)
         assert 0, "invalid attr_type {}".format(attr_type)
 
+    @save_attr
     def add_mod(self, attr_type, **kwargs):
         """Add a modifier to the resource's min, or max, based on attr type.
 
@@ -96,8 +88,8 @@ class Resource(object):
             self.min_modifiers.add(**kwargs)
         else:
             assert 0, "invalid attr_type {}".format(attr_type)
-        self.notify_observer(NotifyType.UPDATE)
 
+    @save_attr
     def remove_mod(self, attr_type, modifier):
         """Remove a modifier from the resource min/max based on attr_type.
 
@@ -113,7 +105,6 @@ class Resource(object):
             self.min_modifiers.remove(modifier)
         else:
             assert 0, "invalid attr_type {}".format(attr_type)
-        self.notify_observer(NotifyType.UPDATE)
 
     def serialize(self):
         """Serialize for storage.
@@ -131,6 +122,7 @@ class Resource(object):
                 "recharge_rate": self.recharge_rate,
                 "recharge_interval": self.recharge_interval }
 
+    @save_attr
     def restore(self):
         """Restore resource to the max.
         
@@ -139,6 +131,7 @@ class Resource(object):
         """
         self.cur_val = self.max
 
+    @save_attr
     def deplete(self):
         """Deplete resource to the minimum.
         
@@ -147,6 +140,7 @@ class Resource(object):
         """
         self.cur_val = self.min
 
+    @save_attr
     def recharge(self):
         """Recharge the resource by the recharge rate.
 
@@ -155,6 +149,7 @@ class Resource(object):
         """
         self.cur += self.recharge_rate
 
+    @save_attr
     def toggle_recharge_on(self):
         """Enable recharging for this resource.
 
@@ -163,6 +158,7 @@ class Resource(object):
         """
         self.will_recharge = True
 
+    @save_attr
     def toggle_recharge_off(self):
         """Disable recharging for this resource.
 

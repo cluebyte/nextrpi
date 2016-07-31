@@ -14,7 +14,7 @@ class AttributeTestCase(TestCase):
     MAX_VAL = 100
 
     def setUp(self):
-        self.attr = Attribute(None, name="test_attr", base=self.BASE_VAL,
+        self.attr = Attribute(Mock(), name="test_attr", base=self.BASE_VAL,
                               min=self.MIN_VAL, max=self.MAX_VAL)
         self.attr._get_modified_val = Mock(return_value=self.MOD_VAL)
         self.attr._get_serialized_mods = Mock(return_value=[])
