@@ -23,19 +23,6 @@ class AttributeHandler(object):
         char.attributes.add(name, self)
         self.attrobj = char.attributes.get(name, return_obj=True)
 
-    @property
-    def character(self):
-        """Return the character associated to the char_dbref.
-        
-        Arguments: None
-        Returns: Character
-        """
-        char = search_object("#{}".format(self.char_dbref))
-        if not char:
-            raise AttributeException("""character not found 
-                                        with id {}""".format(self.char_dbref))
-        return char
-
     def all(self):
         """Gets all attributes in cache.
 
