@@ -86,6 +86,13 @@ class AttributeHandler(object):
             self.remove(name)
 
     def _build_attribute(self, **serialized_attr):
+        """Return built attribute given attribute serialization.
+
+        Arguments: 
+        serialized_attr (dict) - serialized attribute
+
+        Returns: Attribute or Resource
+        """
         if serialized_attr.get('type') == "attribute":
             return Attribute(self.attrobj, **serialized_attr)
         elif serialized_attr.get('type') == "resource":
