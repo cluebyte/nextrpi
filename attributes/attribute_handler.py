@@ -20,8 +20,8 @@ class AttributeHandler(object):
     """
     def __init__(self, char, name="attribute_handler"):
         self.attributes = {}
-        self.char.attributes.add(name, self)
-        self.attrobj = self.char.attributes.get(name, return_obj=True)
+        char.attributes.add(name, self)
+        self.attrobj = char.attributes.get(name, return_obj=True)
 
     @property
     def character(self):
