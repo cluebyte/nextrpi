@@ -4,7 +4,6 @@ as health, mana, rocket power, etc.
 """
 from attribute import Attribute
 from resource_constants import AttributeType
-from observer_constants import NotifyType
 from save_wrapper import save_attr
 
 
@@ -25,8 +24,8 @@ class Resource(object):
                 max=None, recharge_interval=60, recharge_rate=1):
         self.name = name
         self._cur_val = cur
-        self._min = Attribute(observer, **min)
-        self._max = Attribute(observer, **max)
+        self._min = Attribute(attrobj, **min)
+        self._max = Attribute(attrobj, **max)
         self.recharge_rate = recharge_rate
         self.recharge_interval = recharge_interval
         self.will_recharge = False
