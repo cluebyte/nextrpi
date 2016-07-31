@@ -21,7 +21,7 @@ class AttributeHandler(object):
     def __init__(self, char, db_name="attribute_handler"):
         self.attributes = {}
         char.attributes.add(db_name, self)
-        self.attrobj = char.attributes.get(name, return_obj=True)
+        self.attrobj = char.attributes.get(db_name, return_obj=True)
 
     def all(self):
         """Gets all attributes in cache.
