@@ -24,7 +24,7 @@ class Resource(object):
     def __init__(self, attrobj, name="resource", cur_val=0, min=None, 
                 max=None, recharge_interval=60, recharge_rate=1):
         self.name = name
-        self._cur_val = cur
+        self._cur_val = cur_val
         self._min = Attribute(attrobj, **min)
         self._max = Attribute(attrobj, **max)
         self.recharge_rate = recharge_rate
