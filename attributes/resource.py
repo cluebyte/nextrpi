@@ -11,10 +11,11 @@ class Resource(object):
     """
     Properties:
     name (string) - name of the attribute
-    base (number) - the value the attribute starts at
     min (Attribute) - attribute value floor
     max (Attribute) - attribute value ceiling
     recharge_interval (number) - interval between recharges in seconds
+    recharge_rate (number) - how much to increase the current value by, for
+                             each recharge interval
     will_charge (boolean) - if recharging is enabled
     cur_val (number) - current value of the resource
     attrobj (Attribute objref) - Evennia database attribute direct object
