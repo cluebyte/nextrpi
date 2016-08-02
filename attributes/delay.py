@@ -88,3 +88,16 @@ class Delay(object):
         Returns: float
         """
         return self.get_time() - time.time()
+
+    def serialize(self):
+        """Serialize for storage.
+
+        Arguments: None
+
+        Returns: dict
+        """
+        return {
+                'seconds': self.get_time_remaining(),
+                'callback': self.callback,
+                'retval': self.retval
+        }
