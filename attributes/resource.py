@@ -66,9 +66,19 @@ class Resource(object):
             self._cur_val = other
 
     def get_mod(self, attr_type, desc, **kwargs):
-        if attr_type == "max":
+        """Get modifier based on attribute type, description, and filters.
+
+        Arguments:
+        attr_type (AttributeType) - what type of attribute we are adding
+                                    modifier to
+        desc (string) - name of the modifier
+        kwargs (dict) - any filters we want to filter the result by
+
+        Returns: Modifier
+        """
+        if attr_type == AttributeType.MAX:
             return self.max_modifiers.get(desc, **kwargs)
-        if attr_type == "min":
+        if attr_type == AttributeType.MIN:
             return self.min_modifiers.get(desc, **kwargs)
         assert 0, "invalid attr_type {}".format(attr_type)
 
