@@ -86,7 +86,7 @@ class DelayHandler(object):
             serialized[name] = {
                                 'seconds': delay.get_time_remaining(),
                                 'callback': delay.callback,
-                                'retval': delay.args}
+                                'retval': delay.retval}
         return serialized
 
     def save(self):
