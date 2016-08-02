@@ -97,7 +97,7 @@ class Delay(object):
         Returns: dict
         """
         return {
-                'seconds': self.get_time_remaining(),
+                'delay_in_seconds': self.get_time_remaining(),
                 'callback': self.callback,
                 'retval': self.retval
         }
