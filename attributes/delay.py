@@ -2,7 +2,7 @@
 Delays act as a wrapper on the Twisted Deferred object that is returned from
 Evennia's delay utility function. Delays act as callbacks in NextRPI, which
 allows various applications, such as enforcing cooldowns, and simulating
-regenerationg resources.
+regenerating resources.
 """
 
 from evennia.utils.utils import delay
@@ -27,6 +27,14 @@ class Delay(object):
             self.deferred = delay(delay_in_seconds, callback, retval)
         else:
             self.deferred = delay(delay_in_seconds, callback)
+
+    @property
+    def callback(self):
+        return self.deferred.func
+
+    @property
+    def retval(self):
+        return self.deferred.args
 
     def delay_more(self, seconds):
         """Delay the callback by additional seconds.
