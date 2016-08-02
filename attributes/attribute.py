@@ -135,7 +135,8 @@ class Attribute(object):
                 "min": self.min,
                 "max": self.max,
                 "type": "attribute",
-                "modifiers": self._get_serialized_mods() }
+                "modifiers": self._get_serialized_mods()
+        }
 
     def __repr__(self):
         return str(self.__dict__)

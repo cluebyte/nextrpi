@@ -130,7 +130,8 @@ class Resource(object):
                 "will_recharge": self.will_recharge,
                 "cur_val": self.cur_val,
                 "recharge_rate": self.recharge_rate,
-                "recharge_interval": self.recharge_interval }
+                "recharge_interval": self.recharge_interval
+        }
 
     @save_attr
     def restore(self):
