@@ -12,8 +12,8 @@ import time
 class Delay(object):
     """
     Properties:
-    deferred (Deferred) - a Twisted deferred object that contains information about
-                          the callback (if any)
+    deferred (Deferred) - a Twisted deferred object that contains information
+                          about the callback (if any)
     """
     def __init__(self, delay_in_seconds, callback=None, retval=None):
         """
@@ -48,7 +48,8 @@ class Delay(object):
         """Reset the callback and then delay by specified seconds.
 
         Arguments:
-        seconds_from_now (int or float) - new delay in seconds before firing callback
+        seconds_from_now (int or float) - new delay in seconds before firing
+                                          callback
         """
         self.deferred.reset(seconds_from_now)
 

@@ -1,9 +1,11 @@
 """
-Delay Handlers should be initialized once on every Object that you care to keep track of delays on.
+Delay Handlers should be initialized once on every Object that you care to
+keep track of delays on.
 
-Delay Handlers validate delays and remove any inactive delays, as well as retrieve any delays currently on a
-character. Delay Handlers also ensure that any delays are recreated on server restart and reload so that
-delays persist across server restart/reloads.
+Delay Handlers validate delays and remove any inactive delays, as well as
+retrieve any delays currently on a character. Delay Handlers also ensure that
+any delays are recreated on server restart and reload so that delays persist
+across server restart/reloads.
 """
 
 from delay import Delay
@@ -19,7 +21,8 @@ class DelayHandler(object):
     def __init__(self, attrobj):
         """
         Arguments:
-        attrobj (Evennia Attribute obj ref) - reference to the Evennia Attribute object that we use to persist
+        attrobj (Evennia Attribute obj ref) - reference to the Evennia Attribute
+                                              object that we use to persist
                                               delays across reload/restarts
         """
         self.delays = {}
@@ -33,7 +36,8 @@ class DelayHandler(object):
         kwargs (dict) - constructor args for Delay
         """
         if not self.delays.get(name, None):
-            raise DelayHandlerException("delay with name: {} already exists, add failed".format(name))
+            raise DelayHandlerException("delay with name: {} already exists, "
+                                        "add failed".format(name))
         self.delays[name] = Delay(**kwargs)
 
     def get(self, name, default=None):
@@ -41,7 +45,8 @@ class DelayHandler(object):
 
         Arguments:
         name (string) - name of the delay
-        default (any or None) - default that should be returned if delay isn't found
+        default (any or None) - default that should be returned if delay isn't
+                                found
 
         Returns: Delay
         """
@@ -49,7 +54,8 @@ class DelayHandler(object):
             return self.delays.get(name, default)
         res = self.delays.get(name)
         if not res:
-            raise DelayHandlerException("delay with name: {} doesn't exist, get failed".format(name))
+            raise DelayHandlerException("delay with name: {} doesn't exist, "
+                                        "get failed".format(name))
         return res
 
     def remove(self, name):
@@ -63,7 +69,8 @@ class DelayHandler(object):
         try:
             del self.delays[name]
         except KeyError:
-            raise DelayHandlerException("delay with name: {} doesn't exist, removal failed".format(name))
+            raise DelayHandlerException("delay with name: {} doesn't exist, "
+                                        "removal failed".format(name))
 
     def all(self):
         """Return a dict representation of all delays.
@@ -84,13 +91,14 @@ class DelayHandler(object):
         serialized = {}
         for name, delay in self.delays.iteritems():
             serialized[name] = {
-                                'seconds': delay.get_time_remaining(),
-                                'callback': delay.callback,
-                                'retval': delay.retval}
+                'seconds': delay.get_time_remaining(),
+                'callback': delay.callback,
+                'retval': delay.retval
+            }
         return serialized
 
     def save(self):
-        """Save all the delays on the handler to the Evennia Attribute object reference.
+        """Save all the delays on the handler to the Evennia Attribute reference.
 
         Arguments: None
 
@@ -101,7 +109,7 @@ class DelayHandler(object):
         self.attrobj.value = serialized
 
     def clear(self):
-        """Remove all delays on the handler to the Evennia Attribute object reference.
+        """Remove all delays on the handler to the Evennia Attribute reference.
 
         Arguments: None
 

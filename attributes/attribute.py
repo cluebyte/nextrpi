@@ -41,7 +41,7 @@ class Attribute(object):
 
     @property
     def cur_val(self):
-        mod_val = self._get_modified_val(self.base)
+        mod_val = self._get_modified_val()
         cur_val = self.base + mod_val
         return self._check_bounds(cur_val)
 

@@ -46,8 +46,7 @@ class AttributeHandler(object):
             return self.attributes[name]
         if 'default' in kwargs:
             return kwargs.get('default')
-        raise AttributeException(
-                                "could not find attribute {}".format(name))
+        raise AttributeException("could not find attribute {}".format(name))
 
     @save_attr
     def add(self, **serialized_attr):
@@ -60,8 +59,7 @@ class AttributeHandler(object):
         """
         name = serialized_attr.get('name')
         if self.get(name, default=None):
-            raise AttributeException("""attribute {} already 
-                                        exists""".format(name))
+            raise AttributeException("attribute {} already exists".format(name))
         attr = self._build_attribute(**serialized_attr)
         self.attributes[name] = attr
 
@@ -101,9 +99,9 @@ class AttributeHandler(object):
         elif serialized_attr.get('type') == "resource":
             return Resource(self.attrobj, **serialized_attr)
         else:
-            assert 0, """invalid
-                        attribute type: {}""".format(
-                                        serialized_attr.get('type', 'None'))
+            assert 0, "invalid attribute type: {}".format(
+                serialized_attr.get('type', 'None')
+            )
 
     def __getattr__(self, name):
         return self.get(name)
