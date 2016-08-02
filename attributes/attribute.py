@@ -58,6 +58,7 @@ class Attribute(object):
         """Get the sum of the modifiers on the attribute.
 
         Arguments: None
+
         Returns: Number
         """
         return self.modifiers.get_modified_val(self.base)
@@ -116,6 +117,7 @@ class Attribute(object):
         """Fetch all serialized modifiers attached on the attribute.
 
         Arguments: None
+
         Returns: List[dict]
         """
         return self.modifiers.serialize_all_mods()

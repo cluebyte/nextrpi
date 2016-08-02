@@ -27,6 +27,7 @@ class AttributeHandler(object):
         """Gets all attributes in cache.
 
         Arguments: None
+
         Returns: List[Attribute]
         """
         return self.attributes.values()
@@ -36,6 +37,7 @@ class AttributeHandler(object):
         
         Arguments: 
         name (string) - name of the attribute used to store on character
+
         default (None) - default return value if attribute not found
         """
         # if dict is currently empty, we repopulate the cache before we try
@@ -80,6 +82,7 @@ class AttributeHandler(object):
         """Clear all attributes from the character.
 
         Arguments: None
+
         Returns: None
         """
         for name in self.attributes.keys():

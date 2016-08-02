@@ -127,6 +127,7 @@ class Resource(object):
         """Restore resource to the max.
         
         Arguments: None
+
         Returns: None
         """
         self.cur_val = self.max
@@ -136,6 +137,7 @@ class Resource(object):
         """Deplete resource to the minimum.
         
         Arguments: None
+
         Returns: None
         """
         self.cur_val = self.min
@@ -145,6 +147,7 @@ class Resource(object):
         """Recharge the resource by the recharge rate.
 
         Arguments: None
+
         Returns: None
         """
         self.cur += self.recharge_rate
@@ -154,6 +157,7 @@ class Resource(object):
         """Enable recharging for this resource.
 
         Arguments: None
+
         Returns: None
         """
         self.will_recharge = True
@@ -163,6 +167,7 @@ class Resource(object):
         """Disable recharging for this resource.
 
         Arguments: None
+
         Returns: None
         """
         self.will_recharge = False
