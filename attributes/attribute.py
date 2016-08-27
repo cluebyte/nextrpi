@@ -134,7 +134,6 @@ class Attribute(object):
                 "base": self.base,
                 "min": self.min,
                 "max": self.max,
-                "type": "attribute",
                 "modifiers": self._get_serialized_mods()
         }
 

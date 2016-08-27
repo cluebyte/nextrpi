@@ -126,7 +126,6 @@ class Resource(object):
         return {
                 "min": self._min.serialize(),
                 "max": self._max.serialize(),
-                "type": "resource",
                 "will_recharge": self.will_recharge,
                 "cur_val": self.cur_val,
                 "recharge_rate": self.recharge_rate,

@@ -15,7 +15,6 @@ class AttributeHandlerTestCase(TestCase):
                 'base': 5,
                 'max': 100,
                 'mods': [],
-                'type': 'attribute',
     }
     ATTR_2 = {
                 'name': 'test_attr2',
@@ -23,7 +22,6 @@ class AttributeHandlerTestCase(TestCase):
                 'base': 50,
                 'max': 200,
                 'mods': [],
-                'type': 'attribute',
     }
     ATTR_3 = {
                 'name': 'test_attr3',
@@ -31,7 +29,6 @@ class AttributeHandlerTestCase(TestCase):
                 'base': 0,
                 'max': 100,
                 'mods': [],
-                'type': 'attribute',
     }
 
     RAW_ATTRS = [
@@ -40,15 +37,16 @@ class AttributeHandlerTestCase(TestCase):
     ]
 
     def setUp(self):
-        char = Mock()
-        self.handler = AttributeHandler(char)
+        attrobj = Mock()
+        self.handler = AttributeHandler(attrobj)
         self.handler.attrobj = Mock()
         self.attr_1 = Attribute(self.handler.attrobj, **self.ATTR_1)
         self.attr_2 = Attribute(self.handler.attrobj, **self.ATTR_2)
         self.attr_3 = Attribute(self.handler.attrobj, **self.ATTR_3)
         self.handler.attributes = {
                                     self.attr_1.name: self.attr_1,
-                                    self.attr_2.name: self.attr_2 }
+                                    self.attr_2.name: self.attr_2
+        }
 
     def tearDown(self):
         self.handler = None

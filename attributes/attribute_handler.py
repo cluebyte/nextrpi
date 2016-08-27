@@ -2,11 +2,7 @@
 AttributeHandler manages the attributes on a character, conveniently storing, 
 adding, removing attributes.
 """
-from attribute import Attribute, AttributeException
-from resource import Resource
-from observer_constants import NotifyType
-from evennia.utils.search import search_object
-from evennia.utils.utils import lazy_property
+from attribute import Attribute
 from save_wrapper import save_attr
 
 
@@ -18,10 +14,9 @@ class AttributeHandler(object):
     attrobj (Attribute objref) - Evennia database attribute direct object
                                  reference, used to save changes to the handler
     """
-    def __init__(self, char, db_name="attribute_handler"):
+    def __init__(self, attrobj):
         self.attributes = {}
-        char.attributes.add(db_name, self)
-        self.attrobj = char.attributes.get(db_name, return_obj=True)
+        self.attrobj = attrobj
 
     def all(self):
         """Gets all attributes in cache.
@@ -40,13 +35,11 @@ class AttributeHandler(object):
 
         default (None) - default return value if attribute not found
         """
-        # if dict is currently empty, we repopulate the cache before we try
-        # and get any attributes
         if self.attributes.get(name):
             return self.attributes[name]
         if 'default' in kwargs:
             return kwargs.get('default')
-        raise AttributeException("could not find attribute {}".format(name))
+        raise AttributeError("could not find attribute {}".format(name))
 
     @save_attr
     def add(self, **serialized_attr):
@@ -59,7 +52,7 @@ class AttributeHandler(object):
         """
         name = serialized_attr.get('name')
         if self.get(name, default=None):
-            raise AttributeException("attribute {} already exists".format(name))
+            raise AttributeError("attribute {} already exists".format(name))
         attr = self._build_attribute(**serialized_attr)
         self.attributes[name] = attr
 
@@ -73,7 +66,7 @@ class AttributeHandler(object):
         Returns: None
         """
         if not self.get(name):
-            raise AttributeException("could not find attribute {}".format(name))
+            raise AttributeError("could not find attribute {}".format(name))
         del self.attributes[name]
 
     def clear(self):
@@ -94,14 +87,7 @@ class AttributeHandler(object):
 
         Returns: Attribute or Resource
         """
-        if serialized_attr.get('type') == "attribute":
-            return Attribute(self.attrobj, **serialized_attr)
-        elif serialized_attr.get('type') == "resource":
-            return Resource(self.attrobj, **serialized_attr)
-        else:
-            assert 0, "invalid attribute type: {}".format(
-                serialized_attr.get('type', 'None')
-            )
+        return Attribute(self.attrobj, **serialized_attr)
 
     def __getattr__(self, name):
         return self.get(name)
