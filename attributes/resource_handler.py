@@ -15,9 +15,8 @@ class ResourceHandler(object):
                                  reference, used to save changes to the handler
     """
 
-    def __init__(self, attrobj):
+    def __init__(self):
         self.resources = {}
-        self.attrobj = attrobj
 
     def all(self):
         """Gets all resources in cache.
