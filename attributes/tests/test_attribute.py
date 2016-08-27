@@ -47,5 +47,4 @@ class AttributeTestCase(TestCase):
                                                   'base': 20,
                                                   'min': 0,
                                                   'max': 100,
-                                                  'type': 'attribute',
                                                   'modifiers': [] })
