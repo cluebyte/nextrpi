@@ -1,23 +1,36 @@
+"""
+Attributes contain a character's traits, which can be used to calculate character performance for whatever actions.
+For example, a character's strength may determine how much damage they can dish out in combat. NextRPI supports
+derived attributes, which allow creators to specify other attributes as dependencies in order to derive a value.
+
+For example, you may specify an 'Armor' attribute that is partially derived from the Agility attribute:
+{'Armor': 'Agility * 100'}.
+"""
 from ast import parse, Num, BinOp, Add, Sub, Mult, Div, Pow, Name
 from attributes.settings import ATTRIBUTE_FORMULAS
-from enum import Enum
 from typeclasses.scripts import Script
 
 
 class AttributeValue(Script):
+    """
+    Contains a numeric value for a trait that an in-game entity has. e.g. strength characterizes the physical power
+    of a character.
+
+    Member variables:
+        - formulas (dict of str: str): mapping of attribute names (case-sensitive) to a mathematical expression.
+        - name (str): display name of the attribute. e.g. 'Dexterity', 'Strength', 'Agility'.
+        - min (int): The minimum value this attribute can be.
+        - max (int): The maximum value this attribute can be.
+    """
+
     def at_script_creation(self):
         self.key = "attribute_your-attribute-name-here"
         self.persistent = True
 
         self.db.formulas = ATTRIBUTE_FORMULAS
-        self.db._type = AttributeType.UNSPECIFIED
         self.db.name = "AttributeName"
         self.db.min = 0
         self.db.max = 100
-
-    @property
-    def type(self):
-        return self.db._type
 
     @property
     def value(self):
@@ -25,9 +38,15 @@ class AttributeValue(Script):
 
 
 class AttributeBaseValue(AttributeValue):
+    """
+    An attribute that isn't derived from any other attribute.
+
+    Member variables:
+        - value (number): The value of the attribute.
+    """
+
     def at_script_creation(self):
         self.db._value = 0
-        self.db._type = AttributeType.BASE
 
     @property
     def value(self):
@@ -39,13 +58,33 @@ class AttributeBaseValue(AttributeValue):
 
 
 class AttributeDerivedValue(AttributeValue):
-    def at_script_creation(self):
-        self.db._type = AttributeType.DERIVED
+    """
+    An attribute that is derived from other attributes. This attribute will use its formula to calculate any
+    attribute dependencies in order to derive its own value.
+
+    i.e. a Baz attribute with formula: 'Foo * Bar' will calculate Foo and Bar's values and then multiply them to return
+    its own value. If Foo and Bar have base values of  10, and 20, then Baz's value is 200.
+
+    Member variables:
+        - value (number): The value of the attribute.
+    """
 
     @property
     def value(self):
+        """
+        Converts the formula into a tree, where the root node is the value being derived, and then recursively traverses
+        the tree until all children node values are calculated.
+
+        Returns:
+            A numeric value.
+        """
         attribute_dependency_tree = _parse_tree(self.db.formulas)
-        val = self._evaluate_attribute_node(char=self.obj, node=attribute_dependency_tree[self.db.name])
+        try:
+            val = self._evaluate_attribute_node(char=self.obj, node=attribute_dependency_tree[self.db.name])
+        except RecursionError as e:
+            raise SyntaxError(
+                "{0} was mis-configured and has a cyclic dependency, attribute formulas used: {1}".format(
+                    self.db.name, self.db.formulas))
 
         if val > self.db.max:
             return self.db.max
@@ -63,25 +102,26 @@ class AttributeDerivedValue(AttributeValue):
             left = self._evaluate_attribute_node(char, node.left)
             right = self._evaluate_attribute_node(char, node.right)
             if isinstance(node.op, Add):
-                return left+right
+                return left + right
             elif isinstance(node.op, Sub):
-                return left-right
+                return left - right
             elif isinstance(node.op, Mult):
-                return left*right
+                return left * right
             elif isinstance(node.op, Div):
-                return left/right
+                return left / right
             elif isinstance(node.op, Pow):
-                return left**right
+                return left ** right
 
 
 def _parse_tree(formulas):
+    """
+    Iterates through all attribute formulas and converts the formula strings into an ast.Node. This node represents
+    a dependency tree that will be traversed to determine attribute values.
+
+    Returns:
+        A dict of str : ast.Node.
+    """
     nodes = {}
     for attribute in formulas.keys():
         nodes[attribute] = parse(formulas[attribute], mode='eval').body
     return nodes
-
-
-class AttributeType(Enum):
-    BASE = 1
-    DERIVED = 2
-    UNSPECIFIED = 3
