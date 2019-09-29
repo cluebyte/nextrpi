@@ -1,4 +1,4 @@
-from ast import parse, Num, BinOp, Add, Sub, Mult, Div, Pow
+from ast import parse, Num, BinOp, Add, Sub, Mult, Div, Pow, Name
 from attributes.settings import ATTRIBUTE_FORMULAS
 from enum import Enum
 from typeclasses.scripts import Script
@@ -31,6 +31,10 @@ class AttributeBaseValue(AttributeValue):
 
     @property
     def value(self):
+        if self.db._value > self.db.max:
+            return self.db.max
+        if self.db._value < self.db.min:
+            return self.db.min
         return self.db._value
 
 
@@ -47,11 +51,12 @@ class AttributeDerivedValue(AttributeValue):
             return self.db.max
         if val < self.db.min:
             return self.db.min
+        return val
 
     def _evaluate_attribute_node(self, char, node):
         if isinstance(node, Num):
             return node.n
-        if _derived_attribute(node):
+        if isinstance(node, Name):
             attr = char.get_attribute(node.id)
             return attr.value
         if isinstance(node, BinOp):
@@ -69,14 +74,10 @@ class AttributeDerivedValue(AttributeValue):
                 return left**right
 
 
-def _derived_attribute(op):
-    return op.op is None
-
-
 def _parse_tree(formulas):
     nodes = {}
     for attribute in formulas.keys():
-        nodes[attribute] = parse(formulas[attribute], mode='eval')
+        nodes[attribute] = parse(formulas[attribute], mode='eval').body
     return nodes
 
 
