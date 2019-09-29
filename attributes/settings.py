@@ -10,7 +10,7 @@
 # If you do add derived attributes to your game, be sure that you do not declare a cyclic dependency.
 # e.g. if Attack Power depends on Strength, do not make Strength also depend on Attack Power for its calculation.
 # In this example, Strength should be a BASE attribute. i.e. its value is a numeric value, such as 10. If you do,
-#  the AttributeHandler won't be initialized correctly and it will complain.
+# the AttributeHandler won't be initialized correctly and it will complain.
 #
 # Example dict:
 # ATTRIBUTE_FORMULAS = {
@@ -21,8 +21,8 @@
 #     'Armor': '(Dexterity * 5) + 100'
 # }
 #
-# Order of operations is supported via "PMDAS":
-# (Parenthesis, Multiplication, Division, Addition, Subtraction). Exponents are not supported.
+# Order of operations is supported via "PEMDAS":
+# (Parenthesis, Exponents, Multiplication, Division, Addition, Subtraction).
 
 ATTRIBUTE_FORMULAS = {
     # Fill in your attributes here.
