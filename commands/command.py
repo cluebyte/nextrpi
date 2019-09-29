@@ -6,6 +6,7 @@ Commands describe the input the account can do to the game.
 """
 
 from evennia import Command as BaseCommand
+
 # from evennia import default_cmds
 
 
@@ -21,7 +22,7 @@ class Command(BaseCommand):
 
     Each Command implements the following methods, called
     in this order (only func() is actually required):
-        - at_pre_cmd(): If this returns True, execution is aborted.
+        - at_pre_cmd(): If this returns anything truthy, execution is aborted.
         - parse(): Should perform any extra parsing needed on self.args
             and store the result on self.
         - func(): Performs the actual work.
@@ -29,7 +30,9 @@ class Command(BaseCommand):
             every command, like prompts.
 
     """
+
     pass
+
 
 # -------------------------------------------------------------
 #
@@ -70,7 +73,7 @@ class Command(BaseCommand):
 #         We just show it here for completeness - we
 #         are satisfied using the default check in Command.
 #         """
-#         return super(MuxCommand, self).has_perm(srcobj)
+#         return super().has_perm(srcobj)
 #
 #     def at_pre_cmd(self):
 #         """

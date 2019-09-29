@@ -65,7 +65,6 @@ class Account(DefaultAccount):
     * Helper methods
 
      msg(text=None, **kwargs)
-     swap_character(new_character, delete_old_character=False)
      execute_cmd(raw_string, session=None)
      search(ostring, global_search=False, attribute_name=None, use_nicks=False, location=None, ignore_errors=False, account=False)
      is_typeclass(typeclass, exact=False)
@@ -92,6 +91,7 @@ class Account(DefaultAccount):
      at_server_shutdown()
 
     """
+
     pass
 
 
@@ -100,4 +100,5 @@ class Guest(DefaultGuest):
     This class is used for guest logins. Unlike Accounts, Guests and their
     characters are deleted after disconnection.
     """
+
     pass
